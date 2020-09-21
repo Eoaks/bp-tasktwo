@@ -16,7 +16,7 @@ Commenting or taking notes is recommended as I will require You to guide me thro
 3. Since our server is going to be open API we should take closer look at securing it from spamming our endpoints.
 
 ## Frontend
-
+Picking custom router is recommended, sapper or routify being obvious candidates
 1. Create simple list view based on server response on /movies endpoint
     - single card should contain fields: title, release_date, director, thumbnail,
    - be aware that objects in array may wary, some might contain some property while other don't
@@ -26,4 +26,5 @@ Commenting or taking notes is recommended as I will require You to guide me thro
    - each property should be editable, images/videos as url strings
     - under movie info section should be save/update button which will send POST/UPDATE/STH request to server to corresponding endpoint
    - UPDATE response from server should be console.logged.
+   
   
