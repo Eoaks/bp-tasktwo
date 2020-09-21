@@ -15,7 +15,7 @@ Commenting or taking notes is recommended as I will require You to guide me thro
     - respond with changed movie array as json to client
 3. Since our server is going to be open API we should take closer look at securing it from spamming our endpoints.
 
-## Frontent
+## Frontend
 
 1. Create simple list view based on server response on /movies endpoint
     - single card should contain fields: title, release_date, director, thumbnail,
