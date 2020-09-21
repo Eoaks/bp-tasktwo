@@ -3,7 +3,7 @@
 #### Hello guys!
 
 Your task will be split into two parts, one for frontend and one for server. Which are located in corresponding folders. To begin with:  clone this repository to Your local machine - it contains basic setup for svelte with postcss + tailwindcss and express server. To finish this task You have *3 days*. 
-Commenting or taking notes is recommended as I will require You to guide me through the app. 
+Commenting or taking notes is recommended as I will require You to guide me through the app. You can change folder structure / names to Your fitting, as well as install external libraries for handling certain tasks. *Good luck!*
 
 ## Server
 
