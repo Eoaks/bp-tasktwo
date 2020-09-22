@@ -1,12 +1,27 @@
 <script>
-	export let test = "";
+	import { onMount } from 'svelte';
+	let movies = {
+		results: []
+	}
+	onMount(async () => {
+		console.log('asd');
+		let res = await fetch('http://localhost:1337/movies');
+		movies = await res.json();
+	});
+	function test() {
+		console.log(movies)
+	}
 </script>
 
 <style type="postcss">
-	.home-wrap {
-		@apply flex flex-wrap justify-center items-center text-blue-600 font-black my-16 mx-12;
-		font-size: 6rem;
-	}
 </style>
 
-<div class="home-wrap">{test}</div>
+<div class="home-wrap" on:click={test}>
+	{#each movies.results as movie}
+		<h1>
+			{movie.title}	
+		</h1>
+	{:else}
+		<p>loading...</p>
+	{/each}
+</div>

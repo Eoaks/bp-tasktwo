@@ -12,4 +12,4 @@
 </svelte:head>
 <Tailwindcss />
 
-<Home test="Hello World!" />
+<Home />
