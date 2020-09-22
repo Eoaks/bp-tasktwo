@@ -8,8 +8,11 @@ var movies = require('../movies.json');
 app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
 	next();
   });
+
+app.use(express.json());
 
 app.get("/", function (req, res) {
 	res.send("Hello World");
@@ -20,16 +23,27 @@ app.listen(PORT, (err) => {
 	console.log(`> Running on localhost:${PORT}`);
 });
 
-app.get("/movies", (req, res) => {
-	res.json(movies);
-});	
+app.route("/movies")
+	.get((req, res) => {
+		res.json(movies);
+	})
+	.post((req, res) => {
+		req.body.id = Math.floor(Math.random()*99999)+1;
+
+		movies.results.push(req.body);
+
+		fs.writeFile('../movies.json', JSON.stringify(movies, null, 4), function writeJSON(err) {
+			if (err) return console.log(err);
+		})
+
+		res.send('added movie');
+	});	
 
 app.route("/movies:id")
 	.get((req, res) => {
 		let movie = {};
 		for(let i = 0; i < movies.results.length; i++){
 			if(movies.results[i].id === Number(req.params.id)) {
-				console.log("found");
 				movie = movies.results[i];
 				break;
 			}
@@ -37,22 +51,17 @@ app.route("/movies:id")
 		res.json(movie);
 	})
 	.put((req, res) => {
-		let movie = {};
-
 		for(let i = 0; i < movies.results.length; i++){
 			if(movies.results[i].id === Number(req.params.id)) {
-				Object.keys(req.params).forEach( key => {
-					movies.results[i][key] = req.params[key]
-				})
-				movie = movies.results[i];
+				movies.results[i] = req.body;			
 				break;
 			}
 		}
 
-		fs.writeFile('../movies.json', JSON.stringify(movies), function writeJSON(err) {
+		fs.writeFile('../movies.json', JSON.stringify(movies, null, 4), function writeJSON(err) {
 			if (err) return console.log(err);
 			console.log('updating movies.json');
 		})
 
-		res.json(movie);
+		res.send('Movie updated succesfully');
 	});	
