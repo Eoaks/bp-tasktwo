@@ -17,17 +17,11 @@
 		background-color: #e6e6e6;
         font-family: Roboto, arial, sans-serif;
 	}
-	.list-wrapper {
-		display: flex;
-		flex-direction: column;
-		margin: 0 auto;
-		width: 90%;
-		min-width: 280px;
-	}
 </style>
 
-<div class="list-wrapper">
-	<a href={$url('/new')}>Add movie</a>
+<div class="w-11/12 flex flex-col mx-auto">
+	<a 	class="ml-1 mt-3 border-2 border-blue-400 bg-blue-400 w-24 text-white text-center rounded hover:bg-blue-500"
+		href={$url('/new')}>Add movie</a>
 	{#each movies.results as movie}
 		<Card data={movie} link={$url(`movie/${movie.id}`)}/>
 	{:else}

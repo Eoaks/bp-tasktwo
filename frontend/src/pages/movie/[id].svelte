@@ -3,9 +3,8 @@
     import Loading from '../../components/Loading.svelte';
 
     export let id = '';
-    $: isEditing = false;
-    $: movie = {};
-    $: console.log(movie)
+    let isEditing = false;
+    let movie = {};
     onMount(async () => {
         let res = await fetch(`http://localhost:1337/movies${id}`);
         movie = await res.json();
@@ -14,6 +13,10 @@
         }
         if(movie.images.length < 1) {
             movie.images.push({})
+        }
+        //fix for youtube urls in order to embed the videos
+        if(movie.videos[0] && movie.videos[0].url.includes('youtu.be/')) {
+            movie.videos[0].url = movie.videos[0].url.replace('youtu.be/', 'youtube.com/embed/')
         }
     });
     function edit(){
@@ -30,153 +33,88 @@
         isEditing = false;
     }
 </script>
-<style>
-    .img-wrapper, .img-wrapper img{
-        width: 150px;
-        height: 180px;
-        border-radius: 10px;
-    }
-    .img-wrapper{
-        background-color: gray;
-    }
-    .movie-wrapper{
-        padding: 1%;
-    }
-    .movie {
-        background-color: #fff;
-        display: flex;
-        flex-direction: column;
-        border-radius: 10px;
-        align-items: center;
-        justify-content: center;
-        padding-bottom: 10px;
-    }
-    .movie-info {
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-        min-width: 500px;
-    }
-    .movie-info .text-wrapper {
-        width: calc(100% - 200px);
-    }
-    .editing-wrapper {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        padding: 2%;
-    }
-    .editing-wrapper *{
-        width: 90%;
-        margin: 0 auto 5px auto;
-        padding: 3px;
-    }
-    .editing-wrapper input, 
-    .editing-wrapper textarea {
-        border-radius: 5px;
-        border: 1px solid black;
-    }
-    .editing-wrapper button {
-        width: 200px;
-    }
-    .italic {
-        font-style: italic;
-    }
-    iframe {
-        width: 90%;
-        height: 250px;
-        max-width: 360px;
-        margin: 10px auto;
-    }
-    button {
-        width: 200px;
-        padding: 3px;
-        border-radius: 5px;
-        border: 1px solid black;
-    }
-    @media (max-width: 525px) {
-        .movie-info {
-            display: flex;
-            flex-direction: column;
-            min-width: unset;
-            padding: 2%;
-        }
-        .movie-info, .text-wrapper {
-            width: 100%;
-        }
-    }
-</style>
 
 {#if !movie.id}
     <Loading />
 {:else}
-    <div class="movie-wrapper">
-        <div class="movie">
+    <div class="p-2">
+        <div class="bg-white flex flex-col rounded items-center justify-center pb-2">
             {#if isEditing}
-                <div class="editing-wrapper">
-                    <label for="thumbnail">Thumbnail url</label>
-                    <input type="text"
+                <form on:submit|preventDefault={update} class="flex flex-col items-center w-full p-2">
+                    <label class="w-11/12 mx-auto mb-1 p1" for="thumbnail">Thumbnail url</label>
+                    <input class="w-11/12 mx-auto mb-1 p1 rounded border border-black p-1" type="text"
+                        id="thumbnail"
                         bind:value={movie.images[0].thumbnail}
                     />
-                    <label for="trailer">Trailer url</label>
-                    <input type="text"
+                    <label class="w-11/12 mx-auto mb-1 p1" for="trailer">Trailer url</label>
+                    <input class="w-11/12 mx-auto mb-1 p1 rounded border border-black p-1" type="text"
+                        id="trailer"
                         bind:value={movie.videos[0].url}
                     />
-                    <label for="title">Title</label>
-                    <input type="text" 
+                    <label class="w-11/12 mx-auto mb-1 p1" for="title">Title</label>
+                    <input class="w-11/12 mx-auto mb-1 p1 rounded border border-black p-1" type="text" 
+                        id="title"
                         placeholder="Title"
-                        bind:value={movie.title} 
+                        bind:value={movie.title}
+                        required 
                     />
-                    <label for="release">Release Date</label>
-                    <input type="date" 
+                    <label class="w-11/12 mx-auto mb-1 p1" for="release">Release Date</label>
+                    <input class="w-11/12 mx-auto mb-1 p1 rounded border border-black p-1" type="date" 
+                        id="release"
                         placeholder="Release date"
                         bind:value={movie.release_date} 
                     />
-                    <label for="tagline">Tagline</label>
-                    <textarea type="text" 
+                    <label class="w-11/12 mx-auto mb-1 p1" for="tagline">Tagline</label>
+                    <textarea class="w-11/12 mx-auto mb-1 p1 rounded border border-black p-1" type="text" 
+                        id="tagline"
                         placeholder="Tagline"
                         bind:value={movie.details[0].tagline} 
                         rows="2"
                     />
-                    <label for="director">Director</label>
-                    <input type="text" 
+                    <label class="w-11/12 mx-auto mb-1 p1" for="director">Director</label>
+                    <input class="w-11/12 mx-auto mb-1 p1 rounded border border-black p-1" type="text" 
+                        id="director"
                         placeholder="Director"
                         bind:value={movie.details[0].director} 
                     />
-                    <label for="cast">Cast</label>
-                    <textarea type="text" 
+                    <label class="w-11/12 mx-auto mb-1 p1" for="cast">Cast</label>
+                    <textarea class="w-11/12 mx-auto mb-1 p1 rounded border border-black p-1" type="text" 
+                        id="cast"
                         placeholder="Cast"
                         bind:value={movie.details[0].cast} 
                         rows="5"
                     />
-                    <label for="storyline">Storyline</label>
-                    <textarea type="text" 
+                    <label class="w-11/12 mx-auto mb-1 p1" for="storyline">Storyline</label>
+                    <textarea class="w-11/12 mx-auto mb-1 p1 rounded border border-black p-1" type="text" 
+                        id="storyline"
                         placeholder="Storyline"
                         bind:value={movie.details[0].storyline} 
                         rows="5"
                     />
-                    <button on:click={update}>Update</button>
-                </div>
+                    <button class="border-2 border-blue-400 bg-blue-400 w-24 text-white text-center rounded hover:bg-blue-500">Update</button>
+                </form>
             {:else}
-                <div class="movie-info">                    
-                    <div class="img-wrapper">
-                        <img src={movie.images[0].thumbnail} alt="">
+                <div class="flex flex-col w-full sm:items-center justify-around sm:flex-row p-2">                    
+                    <div class="bg-gray-500 rounded w-40 h-56 mr-1">
+                        <img class="bg-gray-500 rounded w-40 h-56" src={movie.images[0].thumbnail} alt="">
                     </div>
-                    <div class="text-wrapper">
+                    <div class="w-full sm:w-8/12">
                         <h1 title={movie.title}>{movie.title}</h1>
-                        <h4>({movie.release_date})</h4>
-                        <p title={movie.details[0].director}>Director: {movie.details[0].director || "Unkown"}</p>
-                        <p class="italic">{movie.details[0].tagline}</p>
-                        <p>Cast: {movie.details[0].cast || "No information about cast"}</p>
-                        <p class="italic">{movie.details[0].storyline}</p>
+                        <h4>({movie.release_date || "No release date"})</h4>
+                        <p title={movie.details[0].director}>Director: {movie.details[0].director || "No details"}</p>
+                        <p class="italic">{movie.details[0].tagline || ' '}</p>
+                        <p>Cast: {movie.details[0].cast || "No details"}</p>
+                        <p class="italic">{movie.details[0].storyline || ' '}</p>
                     </div>
                 </div>
                 {#if movie.videos[0].url}
-                    <iframe src={movie.videos[0].url} frameborder="0" title="trailer"></iframe>
+                    <div class="w-11/12 pb-64 mx-auto my-5 relative">
+                        <iframe class="w-full h-full absolute" src={movie.videos[0].url} frameborder="0" title="trailer" allowfullscreen></iframe>
+                    </div>
                 {/if}
             {/if}
             {#if !isEditing}
-                <button on:click={edit}>Edit</button>
+                <button class="border-2 border-blue-400 bg-blue-400 w-24 text-white text-center rounded hover:bg-blue-500" on:click={edit}>Edit</button>
             {/if}
         </div>
     </div>

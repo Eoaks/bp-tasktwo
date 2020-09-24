@@ -1,26 +1,34 @@
 const PORT = "1337";
 const express = require("express");
 const app = express();
-
+const rateLimit = require("express-rate-limit");
 const fs = require('fs');
 var movies = require('../movies.json');
 
+
+const apiLimiter = rateLimit({
+	windowMs: 1 * 60 * 1000, // 1 minute
+	max: 15
+  });
+
+//global middleware
+app.use(apiLimiter);
 app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
 	next();
   });
-
 app.use(express.json());
-
-app.get("/", function (req, res) {
-	res.send("Hello World");
-});
 
 app.listen(PORT, (err) => {
 	if (err) console.log("error", err);
 	console.log(`> Running on localhost:${PORT}`);
+});
+
+//routes
+app.get("/", function (req, res) {
+	res.send("Hello World");
 });
 
 app.route("/movies")

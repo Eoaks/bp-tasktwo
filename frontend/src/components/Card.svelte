@@ -5,49 +5,16 @@
         data.images.push({})
     }
 </script>
-<style>
-    .movie-card-wrapper {
-        width: 100%;
-        min-width: 280px;
-        padding: 5px;
-    }
-    .movie-card {
-        border: 1px solid #eee;
-        display: flex;
-        overflow: hidden;
-        line-height: 1;
-        cursor: pointer;
-        background-color: #fff;
-        border-radius: 10px;
-    }
-    .movie-card img,
-    .img-wrapper {
-        border-radius: 10px;
-        width: 120px;
-        height: 150px;
-        margin-right: 10px;
-        background-color: gray;
-    }
-    .movie-card h1 {
-        font-size: 1.2em;
-    }
-    .movie-card span {
-        padding: 5px;
-        width: 100%;
-    }
-    .movie-card span * {
-        margin: 5px 0;
-    }
-</style>
-<div class="movie-card-wrapper">
-    <a href={link} class="movie-card">
-        <div class="img-wrapper">
-            <img src={data.images[0].thumbnail} alt="">
+
+<div class="w-full p-1">
+    <a href={link} class="border border-gray-500 flex rounded bg-white hover:border-gray-700">
+        <div class="bg-gray-500 rounded w-40 h-56 mr-1">
+            <img class="bg-gray-500 rounded w-40 h-56" src={data.images[0].thumbnail} alt="">
         </div>
-        <span>
-            <h1 title={data.title}>{data.title}</h1>
-            <h4>({data.release_date})</h4>
-            <p title={data.details[0].director}>Director: {data.details[0].director}</p>
+        <span class="w-10/12 p-1">
+            <h1 class="my-2 text-lg font-bold" title={data.title}>{data.title}</h1>
+            <h4 class="my-2 font-bold" >({data.release_date || "No release date"})</h4>
+            <p class="my-2" title={data.details[0].director}>Director: {data.details[0].director || 'No details'}</p>
         </span>
     </a>
 </div>
